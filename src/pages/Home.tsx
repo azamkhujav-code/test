@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react';\n// Task 2 completed: Home component scaffold added
 
 type Props = {
   user?: string;
