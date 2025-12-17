@@ -1,0 +1,1 @@
+Task 1 complete: added login UI (Login.tsx, Home.tsx) and App wiring.
