@@ -1,4 +1,5 @@
-import React from 'react';\n// Task 2 completed: Home component scaffold added
+import React from 'react';
+import Header from '../components/Header';
 
 type Props = {
   user?: string;
@@ -8,6 +9,7 @@ type Props = {
 const Home: React.FC<Props> = ({ user, onLogout }) => {
   return (
     <div className="home">
+      <Header />
       <h1>Welcome{user ? `, ${user}` : ''}!</h1>
       <button onClick={onLogout}>Sign out</button>
     </div>

@@ -1,4 +1,40 @@
-/* Task 4 completed: CSS added for login/home UI */\n/* Basic app styles with login and home UI */
+/* Task 4 completed: CSS added for login/home UI */
+
+/* Header styling */
+.app-header {
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.app-header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.app-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: #111827;
+}
+.app-header .nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.app-header .nav a {
+  color: #374151;
+  text-decoration: none;
+  font-weight: 500;
+}
+\n/* Basic app styles with login and home UI */
 
 :root {
   --bg: #f6f7fb;
