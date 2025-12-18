@@ -1,4 +1,4 @@
-import React from 'react'; // t2: in-progress
+import React from 'react'; // t2: header integration completed
 import Header from '../components/Header';
 
 type Props = {
