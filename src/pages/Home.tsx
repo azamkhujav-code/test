@@ -1,5 +1,6 @@
 import React from 'react'; // t2: header integration completed
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 type Props = {
   user?: string;
@@ -12,6 +13,7 @@ const Home: React.FC<Props> = ({ user, onLogout }) => {
       <Header />
       <h1>Welcome{user ? `, ${user}` : ''}!</h1>
       <button onClick={onLogout}>Sign out</button>
+      <Footer />
     </div>
   );
 };
