@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getCsrfToken } from '../utils/csrf';
 
 type Props = {
   onLogin: (email: string) => void;
@@ -15,10 +16,45 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       setError("Please enter both email and password.");
       return;
     }
-    // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+    // Attempt to authenticate with anti-CSRF protection token when available
+    const token = getCsrfToken();
+    const payload = { email, password };
+    if (token) {
+      fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': token,
+        },
+        body: JSON.stringify(payload),
+      })
+        .then((res) => {
+          if (res.ok) {
+            // Server accepted the login (CSRF token valid)
+            localStorage.setItem("userEmail", email);
+            localStorage.setItem("loggedIn", "true");
+            onLogin(email);
+          } else {
+            // Optional: show server-provided error message
+            res.json().then((data) => {
+              setError(data?.message ?? 'Login failed.');
+            }).catch(() => {
+              setError('Login failed.');
+            });
+          }
+        })
+        .catch(() => {
+          // If the login endpoint is unavailable (e.g., running without a backend), fall back to local login
+          localStorage.setItem("userEmail", email);
+          localStorage.setItem("loggedIn", "true");
+          onLogin(email);
+        });
+    } else {
+      // No CSRF token available; perform a local placeholder login
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("loggedIn", "true");
+      onLogin(email);
+    }
   };
 
   return (

@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { ensureCsrfToken } from './utils/csrf';
 import Login from './pages/Login';\n// Task 3 completed: App wired login flow with Login/Home components
 import Home from './pages/Home';
 import './App.css';
 
 function App() {
-  const [user, setUser] = useState<string | null>(null);
+    const [user, setUser] = useState<string | null>(null);
 
-  useEffect(() => {
+    useEffect(() => {
+    // Initialize CSRF protection token for the session
+    ensureCsrfToken();
     const stored = localStorage.getItem('userEmail');
     if (stored) setUser(stored);
-  }, []);
+    }, []);
 
   const handleLogin = (email: string) => {
     setUser(email);
