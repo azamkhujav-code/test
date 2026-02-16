@@ -5,11 +5,13 @@
  * such as login, logout, and other user interactions.
  */
 
-export enum UserAction {
-  LOGIN = 'USER_LOGIN',
-  LOGOUT = 'USER_LOGOUT',
-  LOGIN_FAILED = 'USER_LOGIN_FAILED',
-}
+export const UserAction = {
+  LOGIN: 'USER_LOGIN',
+  LOGOUT: 'USER_LOGOUT',
+  LOGIN_FAILED: 'USER_LOGIN_FAILED',
+} as const;
+
+export type UserAction = typeof UserAction[keyof typeof UserAction];
 
 export interface UserActionEvent {
   action: UserAction;

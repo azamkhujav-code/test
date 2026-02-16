@@ -21,7 +21,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
         errorCode: 'MISSING_CREDENTIALS',
         errorMessage: 'Please enter both email and password.',
       };
-      userActionMonitor.track(UserAction.LOGIN_FAILED, undefined, failedMetadata);
+      userActionMonitor.track(UserAction.LOGIN_FAILED, undefined, failedMetadata as Record<string, unknown>);
       
       return;
     }
@@ -40,7 +40,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
         deviceType: /Mobile|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
       }
     };
-    userActionMonitor.track(UserAction.LOGIN, email, loginMetadata);
+    userActionMonitor.track(UserAction.LOGIN, email, loginMetadata as Record<string, unknown>);
     
     onLogin(email);
   };

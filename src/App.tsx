@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import Login from './pages/Login';\n// Task 3 completed: App wired login flow with Login/Home components
+import { useEffect, useState, useRef } from 'react';
+import Login from './pages/Login';
 import Home from './pages/Home';
 import './App.css';
 import { userActionMonitor, UserAction } from './utils/monitoring';
@@ -38,7 +38,7 @@ function App() {
       logoutReason: 'user_initiated',
       sessionDuration,
     };
-    userActionMonitor.track(UserAction.LOGOUT, currentUser || undefined, logoutMetadata);
+    userActionMonitor.track(UserAction.LOGOUT, currentUser || undefined, logoutMetadata as Record<string, unknown>);
   };
 
   return (

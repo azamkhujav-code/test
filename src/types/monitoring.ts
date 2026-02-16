@@ -2,7 +2,8 @@
  * TypeScript types for user action monitoring
  */
 
-import { UserAction, UserActionEvent, MonitoringConfig } from '../utils/monitoring';
+import type { UserActionEvent, MonitoringConfig } from '../utils/monitoring';
+import { UserAction } from '../utils/monitoring';
 
 export type { UserActionEvent, MonitoringConfig };
 export { UserAction };

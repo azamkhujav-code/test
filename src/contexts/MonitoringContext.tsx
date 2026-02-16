@@ -4,7 +4,8 @@
  * Provides app-wide access to monitoring utilities via React Context
  */
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext } from 'react';
+import type { ReactNode } from 'react';
 import { userActionMonitor, UserAction } from '../utils/monitoring';
 import type { 
   UseMonitoring, 
@@ -21,15 +22,15 @@ interface MonitoringProviderProps {
 
 export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({ children }) => {
   const trackLogin = (userId: string, metadata?: LoginMetadata) => {
-    userActionMonitor.track(UserAction.LOGIN, userId, metadata);
+    userActionMonitor.track(UserAction.LOGIN, userId, metadata as Record<string, unknown>);
   };
 
   const trackLogout = (userId?: string, metadata?: LogoutMetadata) => {
-    userActionMonitor.track(UserAction.LOGOUT, userId, metadata);
+    userActionMonitor.track(UserAction.LOGOUT, userId, metadata as Record<string, unknown>);
   };
 
   const trackLoginFailed = (metadata?: LoginFailedMetadata) => {
-    userActionMonitor.track(UserAction.LOGIN_FAILED, undefined, metadata);
+    userActionMonitor.track(UserAction.LOGIN_FAILED, undefined, metadata as Record<string, unknown>);
   };
 
   const getEvents = () => {
