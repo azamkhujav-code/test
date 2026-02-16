@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { userActionMonitor, UserAction } from '../utils/monitoring';
+import type { LoginMetadata, LoginFailedMetadata } from '../types/monitoring';
 
 type Props = {
   onLogin: (email: string) => void;
@@ -13,11 +15,33 @@ const Login: React.FC<Props> = ({ onLogin }) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please enter both email and password.");
+      
+      // Track login failure
+      const failedMetadata: LoginFailedMetadata = {
+        errorCode: 'MISSING_CREDENTIALS',
+        errorMessage: 'Please enter both email and password.',
+      };
+      userActionMonitor.track(UserAction.LOGIN_FAILED, undefined, failedMetadata);
+      
       return;
     }
+    
     // Simple client-side placeholder authentication
     localStorage.setItem("userEmail", email);
     localStorage.setItem("loggedIn", "true");
+    
+    // Track successful login
+    const loginMetadata: LoginMetadata = {
+      loginMethod: 'email',
+      deviceInfo: {
+        browser: navigator.userAgent.includes('Chrome') ? 'Chrome' : 
+                 navigator.userAgent.includes('Firefox') ? 'Firefox' : 
+                 navigator.userAgent.includes('Safari') ? 'Safari' : 'Other',
+        deviceType: /Mobile|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+      }
+    };
+    userActionMonitor.track(UserAction.LOGIN, email, loginMetadata);
+    
     onLogin(email);
   };
 
