@@ -81,6 +81,46 @@ body {
   font-size: 13px;
 }
 
+/* Password Strength Indicator */
+.password-strength {
+  margin-top: 8px;
+}
+
+.strength-bar {
+  height: 4px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  margin-bottom: 6px;
+}
+
+.strength-text {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 4px 0;
+  text-align: left;
+}
+
+.password-requirements {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0 0;
+  text-align: left;
+}
+
+.requirement-error {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 4px 0;
+  padding-left: 16px;
+  position: relative;
+}
+
+.requirement-error::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+}
+
 /* Home */
 .home {
   display: flex;
