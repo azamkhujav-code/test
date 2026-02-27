@@ -76,6 +76,49 @@ body {
   cursor: pointer;
 }
 
+.login-form button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.info-box {
+  background: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 13px;
+  text-align: left;
+}
+
+.info-box p {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  color: #0369a1;
+}
+
+.info-box ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #0c4a6e;
+}
+
+.info-box li {
+  margin: 4px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+}
+
+.security-note {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.security-note small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
 .error {
   color: #d8000c;
   font-size: 13px;
