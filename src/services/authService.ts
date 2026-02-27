@@ -1,5 +1,5 @@
+import type { User } from '../utils/auth';
 import {
-  User,
   verifyPassword,
   generateSecureToken,
   sanitizeEmail,

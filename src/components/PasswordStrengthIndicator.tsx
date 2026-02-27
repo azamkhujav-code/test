@@ -1,4 +1,3 @@
-import React from 'react';
 import { validatePassword } from '../utils/auth';
 
 interface Props {
@@ -12,10 +11,10 @@ interface Props {
  * Displays real-time feedback on password strength and requirements.
  * Helps users create strong, secure passwords.
  */
-const PasswordStrengthIndicator: React.FC<Props> = ({
+const PasswordStrengthIndicator = ({
   password,
   showRequirements = true,
-}) => {
+}: Props) => {
   if (!password && !showRequirements) {
     return null;
   }

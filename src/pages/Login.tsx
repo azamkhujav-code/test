@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { authenticateUser } from '../services/authService';
 import { validateEmail } from '../utils/auth';
 
@@ -17,7 +17,7 @@ type Props = {
  * - Generic error messages to prevent user enumeration
  * - Password input is properly masked
  */
-const Login: React.FC<Props> = ({ onLogin }) => {
+const Login = ({ onLogin }: Props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
