@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import Login from './pages/Login';\n// Task 3 completed: App wired login flow with Login/Home components
+import { useEffect, useState } from 'react';
+import Login from './pages/Login';
 import Home from './pages/Home';
+import ErrorBoundary from './components/ErrorBoundary';
+import ErrorFallback from './components/ErrorFallback';
 import './App.css';
 
 function App() {
@@ -24,9 +26,33 @@ function App() {
   return (
     <div className="App">
       {!user ? (
-        <Login onLogin={handleLogin} />
+        <ErrorBoundary
+          componentName="Login"
+          fallback={(error, resetError) => (
+            <ErrorFallback 
+              error={error} 
+              resetError={resetError} 
+              componentName="Login"
+            />
+          )}
+          resetKeys={[user]}
+        >
+          <Login onLogin={handleLogin} />
+        </ErrorBoundary>
       ) : (
-        <Home user={user} onLogout={handleLogout} />
+        <ErrorBoundary
+          componentName="Home"
+          fallback={(error, resetError) => (
+            <ErrorFallback 
+              error={error} 
+              resetError={resetError} 
+              componentName="Home"
+            />
+          )}
+          resetKeys={[user]}
+        >
+          <Home user={user} onLogout={handleLogout} />
+        </ErrorBoundary>
       )}
     </div>
   );
