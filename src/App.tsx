@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import Login from './pages/Login';\n// Task 3 completed: App wired login flow with Login/Home components
+import { useEffect, useState } from 'react';
+// Task 3 completed: App wired login flow with Login/Home components
+import Login from './pages/Login';
 import Home from './pages/Home';
+import ErrorBoundary from './components/ErrorBoundary';
+import ErrorFallback from './components/ErrorFallback';
 import './App.css';
 
 function App() {
@@ -24,9 +27,19 @@ function App() {
   return (
     <div className="App">
       {!user ? (
-        <Login onLogin={handleLogin} />
+        <ErrorBoundary 
+          fallback={<ErrorFallback componentName="Login Page" />}
+          onError={(error) => console.error('Login page error:', error)}
+        >
+          <Login onLogin={handleLogin} />
+        </ErrorBoundary>
       ) : (
-        <Home user={user} onLogout={handleLogout} />
+        <ErrorBoundary 
+          fallback={<ErrorFallback componentName="Home Page" />}
+          onError={(error) => console.error('Home page error:', error)}
+        >
+          <Home user={user} onLogout={handleLogout} />
+        </ErrorBoundary>
       )}
     </div>
   );
