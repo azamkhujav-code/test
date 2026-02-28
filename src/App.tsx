@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import Login from './pages/Login';\n// Task 3 completed: App wired login flow with Login/Home components
+import { useEffect, useState } from 'react';
+import Login from './pages/Login';
 import Home from './pages/Home';
+import ErrorBoundary from './components/ErrorBoundary';
+import { errorLogger } from './utils/errorLogger';
 import './App.css';
 
 function App() {
@@ -24,9 +26,32 @@ function App() {
   return (
     <div className="App">
       {!user ? (
-        <Login onLogin={handleLogin} />
+        <ErrorBoundary 
+          onError={(error, errorInfo) => errorLogger.logError(error, errorInfo)}
+          fallback={
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <h2>Unable to load login page</h2>
+              <p>Please refresh the page to try again.</p>
+              <button onClick={() => window.location.reload()}>Refresh</button>
+            </div>
+          }
+        >
+          <Login onLogin={handleLogin} />
+        </ErrorBoundary>
       ) : (
-        <Home user={user} onLogout={handleLogout} />
+        <ErrorBoundary 
+          onError={(error, errorInfo) => errorLogger.logError(error, errorInfo)}
+          fallback={
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <h2>Unable to load home page</h2>
+              <p>Please refresh the page or log out to try again.</p>
+              <button onClick={handleLogout} style={{ marginRight: '10px' }}>Log Out</button>
+              <button onClick={() => window.location.reload()}>Refresh</button>
+            </div>
+          }
+        >
+          <Home user={user} onLogout={handleLogout} />
+        </ErrorBoundary>
       )}
     </div>
   );
