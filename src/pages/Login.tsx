@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { User } from '../types/user';
+import { createUser } from '../types/user';
 
 type Props = {
-  onLogin: (email: string) => void;
+  onLogin: (user: User) => void;
 };
 
 const Login: React.FC<Props> = ({ onLogin }) => {
@@ -16,9 +18,8 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       return;
     }
     // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+    const user = createUser(email);
+    onLogin(user);
   };
 
   return (

@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import Login from './pages/Login';\n// Task 3 completed: App wired login flow with Login/Home components
+import { useEffect, useState } from 'react';
+import Login from './pages/Login';
 import Home from './pages/Home';
 import './App.css';
+import type { User } from './types/user';
+import { storage } from './utils/storage';
 
 function App() {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem('userEmail');
-    if (stored) setUser(stored);
+    const storedUser = storage.getUser();
+    if (storedUser) {
+      setUser(storedUser);
+    }
   }, []);
 
-  const handleLogin = (email: string) => {
-    setUser(email);
+  const handleLogin = (userData: User) => {
+    storage.saveUser(userData);
+    setUser(userData);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('loggedIn');
-    localStorage.removeItem('userEmail');
+    storage.clearUser();
     setUser(null);
   };
 
