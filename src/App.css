@@ -1,4 +1,4 @@
-/* Task 4 completed: CSS added for login/home UI */\n/* Basic app styles with login and home UI */
+/* Enhanced accessibility styles with improved focus states and keyboard navigation */
 
 :root {
   --bg: #f6f7fb;
@@ -6,6 +6,9 @@
   --text: #1f2937;
   --muted: #6b7280;
   --primary: #646cff;
+  --error: #d8000c;
+  --focus-ring: #0066ff;
+  --focus-ring-width: 3px;
 }
 
 #root {
@@ -61,9 +64,36 @@ body {
 
 .form-group input {
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   border-radius: 6px;
   font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 0 var(--focus-ring-width) rgba(0, 102, 255, 0.2);
+}
+
+.form-group input:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.form-group input[aria-invalid="true"] {
+  border-color: var(--error);
+}
+
+.form-group input[aria-invalid="true"]:focus {
+  border-color: var(--error);
+  box-shadow: 0 0 0 var(--focus-ring-width) rgba(216, 0, 12, 0.2);
+}
+
+.required-indicator {
+  color: var(--error);
+  margin-left: 4px;
+  font-weight: bold;
 }
 
 .login-form button {
@@ -74,11 +104,36 @@ body {
   color: white;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.login-form button:hover {
+  background: #535bf2;
+}
+
+.login-form button:focus {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-ring-width) rgba(0, 102, 255, 0.4);
+}
+
+.login-form button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.login-form button:active {
+  transform: scale(0.98);
 }
 
 .error {
-  color: #d8000c;
-  font-size: 13px;
+  color: var(--error);
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 8px 0;
 }
 
 /* Home */
@@ -96,10 +151,66 @@ body {
   margin-bottom: 1rem;
 }
 
+.home h1:focus {
+  outline: none;
+}
+
+.home nav {
+  margin-top: 1rem;
+}
+
 .home button {
-  padding: 10px 14px;
+  padding: 12px 20px;
   border-radius: 6px;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   background: #fff;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.home button:hover {
+  background: #f5f5f5;
+  border-color: #999;
+}
+
+.home button:focus {
+  outline: none;
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 0 var(--focus-ring-width) rgba(0, 102, 255, 0.2);
+}
+
+.home button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.home button:active {
+  transform: scale(0.98);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .form-group input,
+  .home button {
+    border-width: 3px;
+  }
+  
+  .login-form button:focus,
+  .home button:focus,
+  .form-group input:focus {
+    outline-width: 4px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
