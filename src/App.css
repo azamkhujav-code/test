@@ -103,3 +103,67 @@ body {
   background: #fff;
   cursor: pointer;
 }
+
+/* Security info */
+.security-notice {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 8px 0;
+  padding: 8px;
+  background: #e8f5e9;
+  border-radius: 4px;
+}
+
+.security-info {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--card);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  max-width: 500px;
+}
+
+.security-info p {
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+  color: var(--text);
+}
+
+.security-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.security-info li {
+  padding: 0.5rem 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.security-info li:before {
+  content: "✓ ";
+  color: #4caf50;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.loading-container p {
+  font-size: 1.2rem;
+  color: var(--muted);
+}
+
+/* Disabled button state */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
