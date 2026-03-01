@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import Login from './pages/Login';\n// Task 3 completed: App wired login flow with Login/Home components
+import { useEffect, useState } from 'react';
+import Login from './pages/Login';
 import Home from './pages/Home';
+import { logUserAction } from './utils/logger';
 import './App.css';
 
 function App() {
@@ -8,7 +9,14 @@ function App() {
 
   useEffect(() => {
     const stored = localStorage.getItem('userEmail');
-    if (stored) setUser(stored);
+    if (stored) {
+      setUser(stored);
+      // Log session restoration
+      logUserAction('Session restored', 'info', {
+        email: stored,
+        timestamp: new Date().toISOString(),
+      });
+    }
   }, []);
 
   const handleLogin = (email: string) => {
@@ -16,6 +24,12 @@ function App() {
   };
 
   const handleLogout = () => {
+    // Log logout action with sanitized user info
+    logUserAction('User logged out', 'info', {
+      email: user || 'unknown',
+      timestamp: new Date().toISOString(),
+    });
+    
     localStorage.removeItem('loggedIn');
     localStorage.removeItem('userEmail');
     setUser(null);

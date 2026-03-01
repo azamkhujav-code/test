@@ -1,23 +1,35 @@
-import React, { useState } from 'react';
+import { useState, type FormEvent } from 'react';
+import { logUserAction } from '../utils/logger';
 
 type Props = {
   onLogin: (email: string) => void;
 };
 
-const Login: React.FC<Props> = ({ onLogin }) => {
+const Login = ({ onLogin }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please enter both email and password.");
+      logUserAction('Login attempt failed', 'warn', {
+        reason: 'Missing credentials',
+        email: email || 'not provided',
+      });
       return;
     }
     // Simple client-side placeholder authentication
     localStorage.setItem("userEmail", email);
     localStorage.setItem("loggedIn", "true");
+    
+    // Log successful login with sanitized email
+    logUserAction('User logged in', 'info', {
+      email,
+      timestamp: new Date().toISOString(),
+    });
+    
     onLogin(email);
   };
 
