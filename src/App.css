@@ -64,6 +64,30 @@ body {
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-group input.input-error {
+  border-color: #d8000c;
+}
+
+.form-group input.input-error:focus {
+  border-color: #d8000c;
+  box-shadow: 0 0 0 2px rgba(216, 0, 12, 0.1);
+}
+
+.field-error {
+  color: #d8000c;
+  font-size: 12px;
+  margin-top: 4px;
+  display: flex;
+  align-items: flex-start;
+  line-height: 1.4;
 }
 
 .login-form button {
@@ -74,6 +98,15 @@ body {
   color: white;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-form button:hover {
+  background: #535ac7;
+}
+
+.login-form button:active {
+  background: #4248b3;
 }
 
 .error {
