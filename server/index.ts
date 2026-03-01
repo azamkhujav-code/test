@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import cors from 'cors';
-import { randomBytes, createHash } from 'crypto';
+import { randomBytes } from 'crypto';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -10,16 +10,13 @@ const PORT = process.env.PORT || 3001;
 // Generate a secure session secret (in production, use environment variable)
 const SESSION_SECRET = process.env.SESSION_SECRET || randomBytes(32).toString('hex');
 
-// CSRF token storage (in production, use Redis or similar)
-const csrfTokens = new Map<string, string>();
-
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
 
 // CORS configuration - allow credentials
 app.use(cors({
-  origin: 'http://localhost:5173', // Vite dev server
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Vite dev server
   credentials: true,
   methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'X-CSRF-Token']
@@ -209,7 +206,7 @@ app.get('/api/protected', (req: Request, res: Response) => {
 });
 
 // Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   console.error('Error:', err);
   res.status(500).json({
     success: false,

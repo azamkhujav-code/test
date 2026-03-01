@@ -1,7 +1,6 @@
-import React from 'react';
 import Login from './pages/Login';
 import Home from './pages/Home';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from './hooks/useAuth';
 import './App.css';
 
 function App() {

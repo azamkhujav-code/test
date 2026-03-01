@@ -4,7 +4,7 @@
  * Implements CSRF protection for state-changing operations
  */
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
@@ -46,7 +46,7 @@ export async function fetchCsrfToken(): Promise<string> {
 
     const data = await response.json();
     csrfToken = data.csrfToken;
-    return csrfToken;
+    return csrfToken || '';
   } catch (error) {
     console.error('Error fetching CSRF token:', error);
     throw error;
@@ -56,14 +56,21 @@ export async function fetchCsrfToken(): Promise<string> {
 /**
  * Make authenticated API request with CSRF protection
  */
-async function apiRequest<T = any>(
+async function apiRequest<T = unknown>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...options.headers,
   };
+
+  // Merge existing headers
+  if (options.headers) {
+    const existingHeaders = new Headers(options.headers);
+    existingHeaders.forEach((value, key) => {
+      headers[key] = value;
+    });
+  }
 
   // Add CSRF token for state-changing operations
   if (options.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method)) {
