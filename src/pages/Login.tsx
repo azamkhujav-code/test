@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
 
-type Props = {
-  onLogin: (email: string) => void;
-};
-
-const Login: React.FC<Props> = ({ onLogin }) => {
+const Login: React.FC = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -16,9 +14,8 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       return;
     }
     // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+    // State management and localStorage are now handled by AuthContext
+    login(email);
   };
 
   return (
