@@ -8,17 +8,31 @@ const Login: React.FC<Props> = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
     }
-    // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+    
+    setError(null);
+    setIsLoading(true);
+    
+    try {
+      // Simulate async authentication (e.g., API call)
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      
+      // Simple client-side placeholder authentication
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("loggedIn", "true");
+      onLogin(email);
+    } catch {
+      setError("Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -34,6 +48,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
+            disabled={isLoading}
           />
         </div>
         <div className="form-group">
@@ -44,9 +59,19 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            disabled={isLoading}
           />
         </div>
-        <button type="submit">Log in</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? (
+            <span className="button-content">
+              <span className="spinner"></span>
+              Logging in...
+            </span>
+          ) : (
+            'Log in'
+          )}
+        </button>
       </form>
     </div>
   );
