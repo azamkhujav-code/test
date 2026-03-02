@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
+import { secureSetItem } from '../utils/secureStorage';
 
 type Props = {
   onLogin: (email: string) => void;
+};
+
+// Sanitize input to prevent XSS attacks
+const sanitizeInput = (input: string): string => {
+  return input
+    .trim()
+    .replace(/[<>]/g, '') // Remove angle brackets
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/on\w+=/gi, ''); // Remove event handlers
 };
 
 const Login: React.FC<Props> = ({ onLogin }) => {
@@ -15,10 +25,21 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       setError("Please enter both email and password.");
       return;
     }
-    // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+    
+    // Sanitize email input
+    const sanitizedEmail = sanitizeInput(email);
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(sanitizedEmail)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    
+    // Use secure storage instead of direct localStorage
+    secureSetItem("userEmail", sanitizedEmail);
+    secureSetItem("loggedIn", "true");
+    onLogin(sanitizedEmail);
   };
 
   return (
