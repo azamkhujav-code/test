@@ -1,31 +1,36 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
-type Props = {
-  onLogin: (email: string) => void;
-};
-
-const Login: React.FC<Props> = ({ onLogin }) => {
+const Login = () => {
+  const { login, error: authError, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [localError, setLocalError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLocalError(null);
+
     if (!email || !password) {
-      setError("Please enter both email and password.");
+      setLocalError("Please enter both email and password.");
       return;
     }
-    // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+
+    try {
+      await login(email, password);
+    } catch (err) {
+      // Error is handled by the AuthContext
+      console.error('Login error:', err);
+    }
   };
+
+  const displayError = localError || authError;
 
   return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit} aria-label="Login form">
         <h2>Login</h2>
-        {error && <div className="error">{error}</div>}
+        {displayError && <div className="error">{displayError}</div>}
         <div className="form-group">
           <label htmlFor="login-email">Email</label>
           <input
@@ -34,6 +39,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
+            disabled={isLoading}
           />
         </div>
         <div className="form-group">
@@ -44,9 +50,12 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            disabled={isLoading}
           />
         </div>
-        <button type="submit">Log in</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Log in'}
+        </button>
       </form>
     </div>
   );
