@@ -1,11 +1,37 @@
-/* Task 4 completed: CSS added for login/home UI */\n/* Basic app styles with login and home UI */
+/* Task 4 completed: CSS added for login/home UI */
+/* Enhanced with accessibility features: focus visibility, contrast, and keyboard navigation */
 
 :root {
   --bg: #f6f7fb;
   --card: #ffffff;
   --text: #1f2937;
   --muted: #6b7280;
-  --primary: #646cff;
+  --primary: #4338ca;
+  --primary-hover: #3730a3;
+  --error: #dc2626;
+  --error-bg: #fef2f2;
+  --focus-ring: #4f46e5;
+  --focus-ring-width: 3px;
+}
+
+/* Skip link for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  font-weight: 600;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 #root {
@@ -28,6 +54,21 @@ body {
   min-height: 100vh;
 }
 
+/* Enhanced focus styles for all interactive elements */
+*:focus {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 /* Login panel */
 .login-container {
   display: flex;
@@ -44,26 +85,64 @@ body {
   gap: 12px;
   padding: 24px;
   width: 360px;
+  max-width: 100%;
   background: var(--card);
   border-radius: 8px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
+.login-form:focus {
+  outline: none;
+}
+
 .login-form h2 {
   margin: 0 0 4px;
+  color: var(--text);
+  font-size: 1.5rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  text-align: left;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.required-indicator {
+  color: var(--error);
+  margin-left: 4px;
 }
 
 .form-group input {
-  padding: 10px;
-  border: 1px solid #ddd;
+  padding: 10px 12px;
+  border: 2px solid #d1d5db;
   border-radius: 6px;
   font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:hover {
+  border-color: #9ca3af;
+}
+
+.form-group input:focus {
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.form-group input[aria-invalid="true"] {
+  border-color: var(--error);
+}
+
+.form-group input[aria-invalid="true"]:focus {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 .login-form button {
@@ -73,12 +152,39 @@ body {
   background: var(--primary);
   color: white;
   font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  margin-top: 8px;
+}
+
+.login-form button:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.login-form button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.login-form button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .error {
-  color: #d8000c;
-  font-size: 13px;
+  color: var(--error);
+  background: var(--error-bg);
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  border-left: 4px solid var(--error);
+  text-align: left;
+}
+
+.error:focus {
+  outline: var(--focus-ring-width) solid var(--error);
+  outline-offset: 2px;
 }
 
 /* Home */
@@ -89,17 +195,86 @@ body {
   justify-content: center;
   min-height: 100vh;
   text-align: center;
+  position: relative;
+}
+
+.home header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1rem;
+}
+
+.home main {
+  margin-top: 2rem;
+}
+
+.home main:focus {
+  outline: none;
 }
 
 .home h1 {
   font-size: 2rem;
   margin-bottom: 1rem;
+  color: var(--text);
 }
 
-.home button {
-  padding: 10px 14px;
+.dashboard-content {
+  margin-top: 2rem;
+  max-width: 600px;
+}
+
+.dashboard-content p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.logout-button {
+  padding: 10px 16px;
   border-radius: 6px;
-  border: 1px solid #ddd;
+  border: 2px solid #d1d5db;
   background: #fff;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s;
+  color: var(--text);
+}
+
+.logout-button:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: #f5f3ff;
+}
+
+.logout-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.logout-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --primary: #3730a3;
+    --text: #000000;
+    --focus-ring-width: 4px;
+  }
+  
+  .form-group input,
+  .logout-button {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
