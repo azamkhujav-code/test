@@ -1,4 +1,4 @@
-/* Task 4 completed: CSS added for login/home UI */\n/* Basic app styles with login and home UI */
+/* Global application styles and CSS variables */
 
 :root {
   --bg: #f6f7fb;
@@ -26,80 +26,4 @@ body {
 
 .App {
   min-height: 100vh;
-}
-
-/* Login panel */
-.login-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 2rem;
-  background: var(--bg);
-}
-
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 24px;
-  width: 360px;
-  background: var(--card);
-  border-radius: 8px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-}
-
-.login-form h2 {
-  margin: 0 0 4px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-group input {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-.login-form button {
-  padding: 12px;
-  border-radius: 6px;
-  border: none;
-  background: var(--primary);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.error {
-  color: #d8000c;
-  font-size: 13px;
-}
-
-/* Home */
-.home {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  text-align: center;
-}
-
-.home h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.home button {
-  padding: 10px 14px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  background: #fff;
-  cursor: pointer;
 }

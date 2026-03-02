@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import './Login.css';
 
 type Props = {
   onLogin: (email: string) => void;
 };
 
-const Login: React.FC<Props> = ({ onLogin }) => {
+const Login = ({ onLogin }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
