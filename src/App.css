@@ -84,9 +84,27 @@ body {
   cursor: not-allowed;
 }
 
-.error {
+.error-message {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  margin-top: 4px;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 4px;
   color: var(--error);
   font-size: 13px;
+}
+
+.error-message svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.error-message span {
+  flex: 1;
 }
 
 /* Password strength meter */
