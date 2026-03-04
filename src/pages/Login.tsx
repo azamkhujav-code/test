@@ -18,6 +18,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [touched, setTouched] = useState({ email: false, password: false });
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,6 +58,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ email: true, password: true });
     const newErrors: { email?: string; password?: string } = {};
 
     if (!email) {
@@ -86,7 +88,9 @@ const Login: React.FC<Props> = ({ onLogin }) => {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
-    setErrors(prev => ({ ...prev, email: validateEmail(newEmail) ? undefined : "Please enter a valid email address." }));
+    if (touched.email) {
+      setErrors(prev => ({ ...prev, email: validateEmail(newEmail) ? undefined : "Please enter a valid email address." }));
+    }
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,19 +98,36 @@ const Login: React.FC<Props> = ({ onLogin }) => {
     setPassword(newPassword);
     const validation = validatePassword(newPassword);
     setPasswordStrength(validation.strength);
-    setErrors(prev => ({ ...prev, password: validation.isValid ? undefined : validation.message }));
+    if (touched.password) {
+      setErrors(prev => ({ ...prev, password: validation.isValid ? undefined : validation.message }));
+    }
+  };
+
+  const handleBlur = (field: 'email' | 'password') => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    if (field === 'email') {
+      setErrors(prev => ({ ...prev, email: validateEmail(email) ? undefined : "Please enter a valid email address." }));
+    } else {
+      const validation = validatePassword(password);
+      setErrors(prev => ({ ...prev, password: validation.isValid ? undefined : validation.message }));
+    }
   };
 
   useEffect(() => {
-    if (email) {
+    if (touched.email) {
       setErrors(prev => ({ ...prev, email: validateEmail(email) ? undefined : "Please enter a valid email address." }));
     }
-    if (password) {
+    if (touched.password) {
       const validation = validatePassword(password);
       setPasswordStrength(validation.strength);
       setErrors(prev => ({ ...prev, password: validation.isValid ? undefined : validation.message }));
     }
-  }, [email, password]);
+  }, [email, password, touched]);
+
+  const getInputClassName = (field: 'email' | 'password') => {
+    if (!touched[field]) return '';
+    return errors[field] ? 'invalid' : 'valid';
+  };
 
   return (
     <div className="login-container">
@@ -119,8 +140,10 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             type="email"
             value={email}
             onChange={handleEmailChange}
+            onBlur={() => handleBlur('email')}
             placeholder="you@example.com"
             aria-invalid={errors.email ? "true" : "false"}
+            className={getInputClassName('email')}
           />
           {errors.email && <ErrorMessage message={errors.email} />}
         </div>
@@ -131,8 +154,10 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             type="password"
             value={password}
             onChange={handlePasswordChange}
+            onBlur={() => handleBlur('password')}
             placeholder="Password"
             aria-invalid={errors.password ? "true" : "false"}
+            className={getInputClassName('password')}
           />
           {errors.password && <ErrorMessage message={errors.password} />}
           <div className="password-strength-meter">
