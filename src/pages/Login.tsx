@@ -115,8 +115,8 @@ const Login: React.FC<Props> = ({ onLogin }) => {
 
   return (
     <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit} aria-label="Login form">
-        <h2>Login</h2>
+      <form className="login-form" onSubmit={handleSubmit} aria-labelledby="login-header">
+        <h2 id="login-header">Login</h2>
         <div className="form-group">
           <label htmlFor="login-email">Email</label>
           <input
@@ -127,9 +127,11 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             placeholder="you@example.com"
             className={errors.email && errors.email.length > 0 ? "input-error" : ""}
             disabled={isLoading}
+            aria-invalid={errors.email && errors.email.length > 0}
+            aria-describedby={errors.email && errors.email.length > 0 ? "email-error" : undefined}
           />
           {errors.email && errors.email.map((error, index) => (
-            <div key={index} className="error">{error}</div>
+            <div key={index} id="email-error" className="error" role="alert">{error}</div>
           ))}
         </div>
         <div className="form-group">
@@ -142,22 +144,24 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             placeholder="Password"
             className={errors.password && errors.password.length > 0 ? "input-error" : ""}
             disabled={isLoading}
+            aria-invalid={errors.password && errors.password.length > 0}
+            aria-describedby={errors.password && errors.password.length > 0 ? "password-error" : undefined}
           />
           {errors.password && errors.password.map((error, index) => (
-            <div key={index} className="error">{error}</div>
+            <div key={index} id="password-error" className="error" role="alert">{error}</div>
           ))}
           {password && (
-            <div className="password-strength">
+            <div className="password-strength" aria-live="polite">
               <div className="strength-bar" style={{ width: `${(passwordStrength / 5) * 100}%` }} data-strength={passwordStrength}></div>
-              <span>{getPasswordStrengthLabel(passwordStrength)}</span>
+              <span>Password strength: {getPasswordStrengthLabel(passwordStrength)}</span>
             </div>
           )}
         </div>
-        <button type="submit" disabled={!isFormValid || isLoading} className={isLoading ? "loading" : ""}>
+        <button type="submit" disabled={!isFormValid || isLoading} className={isLoading ? "loading" : ""} aria-busy={isLoading}>
           {isLoading ? "Logging in..." : "Log in"}
         </button>
         {errors.form && errors.form.map((error, index) => (
-          <div key={index} className="error form-error">{error}</div>
+          <div key={index} className="error form-error" role="alert">{error}</div>
         ))}
       </form>
     </div>
