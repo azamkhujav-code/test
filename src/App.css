@@ -1,4 +1,5 @@
-/* Task 4 completed: CSS added for login/home UI */\n/* Basic app styles with login and home UI */
+/* Task 4 completed: CSS added for login/home UI */
+/* Basic app styles with login and home UI */
 
 :root {
   --bg: #f6f7fb;
@@ -6,6 +7,8 @@
   --text: #1f2937;
   --muted: #6b7280;
   --primary: #646cff;
+  --error: #d8000c;
+  --disabled: #cccccc;
 }
 
 #root {
@@ -74,11 +77,29 @@ body {
   color: white;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-form button:disabled {
+  background-color: var(--disabled);
+  cursor: not-allowed;
 }
 
 .error {
-  color: #d8000c;
+  color: var(--error);
   font-size: 13px;
+  margin-top: 4px;
+}
+
+/* Form validation styles */
+.form-group input:invalid {
+  border-color: var(--error);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
 }
 
 /* Home */
