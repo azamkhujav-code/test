@@ -9,6 +9,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [isFormValid, setIsFormValid] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
 
   const validateEmail = (email: string): boolean => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -17,6 +18,16 @@ const Login: React.FC<Props> = ({ onLogin }) => {
 
   const validatePassword = (password: string): boolean => {
     return password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password);
+  };
+
+  const calculatePasswordStrength = (password: string): number => {
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    return strength;
   };
 
   useEffect(() => {
@@ -32,6 +43,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
 
     setErrors(newErrors);
     setIsFormValid(Object.keys(newErrors).length === 0 && email !== "" && password !== "");
+    setPasswordStrength(calculatePasswordStrength(password));
   }, [email, password]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,6 +54,15 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       localStorage.setItem("loggedIn", "true");
       onLogin(email);
     }
+  };
+
+  const getPasswordStrengthLabel = (strength: number): string => {
+    if (strength === 0) return "Very Weak";
+    if (strength === 1) return "Weak";
+    if (strength === 2) return "Fair";
+    if (strength === 3) return "Good";
+    if (strength === 4) return "Strong";
+    return "Very Strong";
   };
 
   return (
@@ -69,6 +90,12 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             placeholder="Password"
           />
           {errors.password && <div className="error">{errors.password}</div>}
+          {password && (
+            <div className="password-strength">
+              <div className="strength-bar" style={{ width: `${(passwordStrength / 5) * 100}%` }}></div>
+              <span>{getPasswordStrengthLabel(passwordStrength)}</span>
+            </div>
+          )}
         </div>
         <button type="submit" disabled={!isFormValid}>Log in</button>
       </form>
