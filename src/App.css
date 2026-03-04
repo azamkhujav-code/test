@@ -120,10 +120,49 @@ body {
   cursor: not-allowed;
 }
 
+.login-form button.loading {
+  position: relative;
+  color: transparent;
+}
+
+.login-form button.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border: 4px solid transparent;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: button-loading-spinner 1s ease infinite;
+}
+
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+
+  to {
+    transform: rotate(1turn);
+  }
+}
+
 .error {
   color: var(--error);
   font-size: 13px;
   margin-top: 4px;
+}
+
+.form-error {
+  background-color: rgba(216, 0, 12, 0.1);
+  border: 1px solid var(--error);
+  border-radius: 4px;
+  padding: 8px;
+  margin-top: 16px;
 }
 
 /* Password strength indicator */

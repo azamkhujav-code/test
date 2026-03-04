@@ -10,6 +10,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
   const [errors, setErrors] = useState<{ email?: string[]; password?: string[] }>({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateEmail = (email: string): string[] => {
     const errors: string[] = [];
@@ -68,13 +69,23 @@ const Login: React.FC<Props> = ({ onLogin }) => {
     );
   }, [email, password, errors]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isFormValid) {
-      // Simple client-side placeholder authentication
-      localStorage.setItem("userEmail", email);
-      localStorage.setItem("loggedIn", "true");
-      onLogin(email);
+    if (isFormValid && !isLoading) {
+      setIsLoading(true);
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        // Simple client-side placeholder authentication
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("loggedIn", "true");
+        onLogin(email);
+      } catch (error) {
+        console.error("Login failed:", error);
+        setErrors(prev => ({ ...prev, form: ["Login failed. Please try again."] }));
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -100,6 +111,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             onChange={handleEmailChange}
             placeholder="you@example.com"
             className={errors.email && errors.email.length > 0 ? "input-error" : ""}
+            disabled={isLoading}
           />
           {errors.email && errors.email.map((error, index) => (
             <div key={index} className="error">{error}</div>
@@ -114,6 +126,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             onChange={handlePasswordChange}
             placeholder="Password"
             className={errors.password && errors.password.length > 0 ? "input-error" : ""}
+            disabled={isLoading}
           />
           {errors.password && errors.password.map((error, index) => (
             <div key={index} className="error">{error}</div>
@@ -125,7 +138,12 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             </div>
           )}
         </div>
-        <button type="submit" disabled={!isFormValid}>Log in</button>
+        <button type="submit" disabled={!isFormValid || isLoading} className={isLoading ? "loading" : ""}>
+          {isLoading ? "Logging in..." : "Log in"}
+        </button>
+        {errors.form && errors.form.map((error, index) => (
+          <div key={index} className="error form-error">{error}</div>
+        ))}
       </form>
     </div>
   );
