@@ -16,8 +16,23 @@ const Login: React.FC<Props> = ({ onLogin }) => {
     const errors: string[] = [];
     if (!email) {
       errors.push("Email is required");
-    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-      errors.push("Please enter a valid email address");
+    } else {
+      // RFC 5322 compliant regex
+      const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!emailRegex.test(email)) {
+        errors.push("Please enter a valid email address");
+      } else {
+        const [localPart, domain] = email.split('@');
+        if (localPart.length > 64) {
+          errors.push("The part before @ in the email is too long");
+        }
+        if (email.length > 254) {
+          errors.push("The email address is too long");
+        }
+        if (domain.startsWith('-') || domain.endsWith('-')) {
+          errors.push("The domain name cannot start or end with a hyphen");
+        }
+      }
     }
     return errors;
   };
