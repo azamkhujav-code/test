@@ -6,6 +6,8 @@
   --text: #1f2937;
   --muted: #6b7280;
   --primary: #646cff;
+  --error: #d8000c;
+  --success: #4caf50;
 }
 
 #root {
@@ -74,11 +76,44 @@ body {
   color: white;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-form button:disabled {
+  background: var(--muted);
+  cursor: not-allowed;
 }
 
 .error {
-  color: #d8000c;
+  color: var(--error);
   font-size: 13px;
+}
+
+/* Password strength meter */
+.password-strength-meter {
+  height: 5px;
+  background-color: #ddd;
+  border-radius: 3px;
+  margin-top: 5px;
+}
+
+.strength-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.strength-0 { width: 20%; background-color: #f44336; }
+.strength-1 { width: 40%; background-color: #ff9800; }
+.strength-2 { width: 60%; background-color: #ffeb3b; }
+.strength-3 { width: 80%; background-color: #8bc34a; }
+.strength-4 { width: 100%; background-color: #4caf50; }
+.strength-5 { width: 100%; background-color: var(--success); }
+
+.password-strength-text {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 5px;
 }
 
 /* Home */
