@@ -7,17 +7,31 @@ type Props = {
 const Login: React.FC<Props> = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string[]; password?: string[] }>({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
 
-  const validateEmail = (email: string): boolean => {
-    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return re.test(email);
+  const validateEmail = (email: string): string[] => {
+    const errors: string[] = [];
+    if (!email) {
+      errors.push("Email is required");
+    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+      errors.push("Please enter a valid email address");
+    }
+    return errors;
   };
 
-  const validatePassword = (password: string): boolean => {
-    return password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password);
+  const validatePassword = (password: string): string[] => {
+    const errors: string[] = [];
+    if (!password) {
+      errors.push("Password is required");
+    } else {
+      if (password.length < 8) errors.push("Password must be at least 8 characters long");
+      if (!/[A-Z]/.test(password)) errors.push("Password must contain at least one uppercase letter");
+      if (!/[a-z]/.test(password)) errors.push("Password must contain at least one lowercase letter");
+      if (!/[0-9]/.test(password)) errors.push("Password must contain at least one number");
+    }
+    return errors;
   };
 
   const calculatePasswordStrength = (password: string): number => {
@@ -33,27 +47,26 @@ const Login: React.FC<Props> = ({ onLogin }) => {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
-    if (newEmail && !validateEmail(newEmail)) {
-      setErrors(prev => ({ ...prev, email: "Please enter a valid email address." }));
-    } else {
-      setErrors(prev => ({ ...prev, email: undefined }));
-    }
+    const emailErrors = validateEmail(newEmail);
+    setErrors(prev => ({ ...prev, email: emailErrors.length > 0 ? emailErrors : undefined }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
     setPasswordStrength(calculatePasswordStrength(newPassword));
-    if (newPassword && !validatePassword(newPassword)) {
-      setErrors(prev => ({ ...prev, password: "Password must be at least 8 characters long and contain uppercase, lowercase, and numeric characters." }));
-    } else {
-      setErrors(prev => ({ ...prev, password: undefined }));
-    }
+    const passwordErrors = validatePassword(newPassword);
+    setErrors(prev => ({ ...prev, password: passwordErrors.length > 0 ? passwordErrors : undefined }));
   };
 
   useEffect(() => {
-    setIsFormValid(validateEmail(email) && validatePassword(password));
-  }, [email, password]);
+    setIsFormValid(
+      email.length > 0 &&
+      password.length > 0 &&
+      (!errors.email || errors.email.length === 0) &&
+      (!errors.password || errors.password.length === 0)
+    );
+  }, [email, password, errors]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,8 +99,11 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={email}
             onChange={handleEmailChange}
             placeholder="you@example.com"
+            className={errors.email && errors.email.length > 0 ? "input-error" : ""}
           />
-          {errors.email && <div className="error">{errors.email}</div>}
+          {errors.email && errors.email.map((error, index) => (
+            <div key={index} className="error">{error}</div>
+          ))}
         </div>
         <div className="form-group">
           <label htmlFor="login-password">Password</label>
@@ -97,8 +113,11 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={password}
             onChange={handlePasswordChange}
             placeholder="Password"
+            className={errors.password && errors.password.length > 0 ? "input-error" : ""}
           />
-          {errors.password && <div className="error">{errors.password}</div>}
+          {errors.password && errors.password.map((error, index) => (
+            <div key={index} className="error">{error}</div>
+          ))}
           {password && (
             <div className="password-strength">
               <div className="strength-bar" style={{ width: `${(passwordStrength / 5) * 100}%` }} data-strength={passwordStrength}></div>
