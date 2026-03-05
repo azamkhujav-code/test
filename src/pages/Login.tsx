@@ -20,7 +20,6 @@ const Login: React.FC<Props> = ({ onLogin }) => {
     setError(null);
 
     try {
-      // TODO: Replace with actual API call
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
@@ -30,15 +29,15 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
 
       const data = await response.json();
-      // Assuming the API returns a token
       localStorage.setItem("authToken", data.token);
       onLogin(email);
     } catch (err) {
-      setError("Invalid email or password. Please try again.");
+      setError(err instanceof Error ? err.message : "An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
