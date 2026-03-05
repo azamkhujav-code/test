@@ -28,16 +28,21 @@ const Login: React.FC<Props> = ({ onLogin }) => {
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
+        throw new Error(data.message || 'Login failed');
       }
 
-      const data = await response.json();
       localStorage.setItem("authToken", data.token);
       onLogin(email);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unexpected error occurred. Please try again.");
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+      console.error('Login error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +52,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit} aria-label="Login form">
         <h2>Login</h2>
-        {error && <div className="error">{error}</div>}
+        {error && <div className="error" role="alert">{error}</div>}
         <div className="form-group">
           <label htmlFor="login-email">Email</label>
           <input
@@ -57,6 +62,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
             disabled={isLoading}
+            required
           />
         </div>
         <div className="form-group">
@@ -68,6 +74,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             disabled={isLoading}
+            required
           />
         </div>
         <button type="submit" disabled={isLoading}>
