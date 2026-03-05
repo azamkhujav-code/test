@@ -24,7 +24,9 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       setError("Please enter a valid email address.");
       return;
     }
-    // Simple client-side placeholder authentication
+    // TODO: Implement proper authentication
+    // SECURITY WARNING: This is a simple client-side placeholder authentication.
+    // In a production environment, replace this with secure server-side authentication.
     localStorage.setItem("userEmail", email);
     localStorage.setItem("loggedIn", "true");
     onLogin(email);
