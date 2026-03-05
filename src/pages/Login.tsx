@@ -4,6 +4,10 @@ type Props = {
   onLogin: (email: string) => void;
 };
 
+const API_BASE_URL = process.env.NODE_ENV === 'production'
+  ? 'https://your-production-domain.com/api'
+  : 'https://localhost:3000/api';
+
 const Login: React.FC<Props> = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +24,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
     setError(null);
 
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
