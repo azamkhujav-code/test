@@ -8,17 +8,40 @@ const Login: React.FC<Props> = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
     }
-    // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // TODO: Replace with actual API call
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await response.json();
+      // Assuming the API returns a token
+      localStorage.setItem("authToken", data.token);
+      onLogin(email);
+    } catch (err) {
+      setError("Invalid email or password. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -34,6 +57,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
+            disabled={isLoading}
           />
         </div>
         <div className="form-group">
@@ -44,9 +68,12 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            disabled={isLoading}
           />
         </div>
-        <button type="submit">Log in</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Log in'}
+        </button>
       </form>
     </div>
   );
