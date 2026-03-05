@@ -30,6 +30,16 @@ const Login: React.FC<Props> = ({ onLogin }) => {
     onLogin(email);
   };
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (error) setError(null);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (error) setError(null);
+  };
+
   return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit} aria-label="Login form">
@@ -41,7 +51,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             id="login-email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             placeholder="you@example.com"
             required
           />
@@ -52,7 +62,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             id="login-password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             placeholder="Password"
             required
           />
