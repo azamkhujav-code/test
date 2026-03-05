@@ -9,10 +9,19 @@ const Login: React.FC<Props> = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please enter both email and password.");
+      return;
+    }
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
       return;
     }
     // Simple client-side placeholder authentication
@@ -34,6 +43,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
+            required
           />
         </div>
         <div className="form-group">
@@ -44,6 +54,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            required
           />
         </div>
         <button type="submit">Log in</button>
