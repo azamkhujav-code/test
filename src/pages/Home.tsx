@@ -1,4 +1,5 @@
-import React from 'react';\n// Task 2 completed: Home component scaffold added
+import React from 'react';
+import { getWelcomeMessage } from '../utils/welcomeMessage';
 
 type Props = {
   user?: string;
@@ -8,7 +9,7 @@ type Props = {
 const Home: React.FC<Props> = ({ user, onLogout }) => {
   return (
     <div className="home">
-      <h1>Welcome{user ? `, ${user}` : ''}!</h1>
+      <h1>{getWelcomeMessage(user)}</h1>
       <button onClick={onLogout}>Sign out</button>
     </div>
   );
