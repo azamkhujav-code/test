@@ -1,6 +1,50 @@
-# User Authentication E2E Tests
+# User Authentication Application with E2E Tests
 
-This project includes end-to-end (E2E) tests for the user authentication flow using Cypress.
+This project is a React-based user authentication application that demonstrates a simple login and logout flow. It includes end-to-end (E2E) tests using Cypress to ensure the authentication functionality works as expected.
+
+## Features
+
+- User login with username and password
+- User logout
+- Protected home page for authenticated users
+- End-to-end tests for authentication flow
+
+## Technologies Used
+
+- React
+- TypeScript
+- Vite (for fast development and building)
+- Cypress (for E2E testing)
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or later)
+- npm (v6 or later)
+
+### Installation
+
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   cd user-auth-e2e-tests
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+### Running the Application
+
+To start the development server:
+
+```
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`.
 
 ## Running E2E Tests
 
@@ -35,6 +79,26 @@ The E2E tests cover the following scenarios:
 - Failed login attempt with incorrect credentials
 - Successful logout
 
+## Project Structure
+
+```
+user-auth-e2e-tests/
+├── src/
+│   ├── pages/
+│   │   ├── Login.tsx
+│   │   └── Home.tsx
+│   ├── App.tsx
+│   └── main.tsx
+├── cypress/
+│   └── e2e/
+│       └── auth.spec.ts
+├── public/
+├── package.json
+├── vite.config.ts
+├── cypress.config.ts
+└── README.md
+```
+
 ## Adding New Tests
 
 To add new E2E tests:
@@ -45,4 +109,10 @@ To add new E2E tests:
 
 For more information on writing Cypress tests, refer to the [Cypress Documentation](https://docs.cypress.io/).
 
-<existing-content-omitted>
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
