@@ -1,15 +1,37 @@
-import React from 'react';\n// Task 2 completed: Home component scaffold added
+import React, { useState } from 'react';
+import { HomeProps } from '../types/auth';
 
-type Props = {
-  user?: string;
-  onLogout: () => void;
-};
+const Home: React.FC<HomeProps> = ({ user, onLogout }) => {
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
 
-const Home: React.FC<Props> = ({ user, onLogout }) => {
+  const handleLogoutClick = () => {
+    setShowLogoutConfirmation(true);
+  };
+
+  const handleConfirmLogout = () => {
+    onLogout();
+    setShowLogoutConfirmation(false);
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutConfirmation(false);
+  };
+
   return (
     <div className="home">
-      <h1>Welcome{user ? `, ${user}` : ''}!</h1>
-      <button onClick={onLogout}>Sign out</button>
+      <h1>Welcome, {user.email}!</h1>
+      <button onClick={handleLogoutClick}>Sign out</button>
+
+      {showLogoutConfirmation && (
+        <div className="logout-confirmation" role="dialog" aria-labelledby="logout-title">
+          <h2 id="logout-title">Confirm Logout</h2>
+          <p>Are you sure you want to log out?</p>
+          <div className="logout-actions">
+            <button onClick={handleConfirmLogout}>Yes, log out</button>
+            <button onClick={handleCancelLogout}>Cancel</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
