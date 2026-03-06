@@ -1,34 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import Login from './pages/Login';\n// Task 3 completed: App wired login flow with Login/Home components
+import React from 'react';
+import Login from './pages/Login';
 import Home from './pages/Home';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import './App.css';
 
-function App() {
-  const [user, setUser] = useState<string | null>(null);
+function AppContent() {
+  const { user, isLoading } = useAuth();
 
-  useEffect(() => {
-    const stored = localStorage.getItem('userEmail');
-    if (stored) setUser(stored);
-  }, []);
-
-  const handleLogin = (email: string) => {
-    setUser(email);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('loggedIn');
-    localStorage.removeItem('userEmail');
-    setUser(null);
-  };
+  if (isLoading) {
+    return <div className="loading-spinner"></div>;
+  }
 
   return (
     <div className="App">
-      {!user ? (
-        <Login onLogin={handleLogin} />
-      ) : (
-        <Home user={user} onLogout={handleLogout} />
-      )}
+      {!user ? <Login /> : <Home />}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
