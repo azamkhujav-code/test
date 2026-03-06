@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
+import { LoginProps } from '../types';
 
-type Props = {
-  onLogin: (email: string) => void;
-};
-
-const Login: React.FC<Props> = ({ onLogin }) => {
+/**
+ * Login component for user authentication.
+ * @param {LoginProps} props - The props for the Login component
+ * @returns {JSX.Element} The rendered Login component
+ */
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Handles form submission for user login.
+   * @param {React.FormEvent} e - The form submission event
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
@@ -16,8 +22,6 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       return;
     }
     // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
     onLogin(email);
   };
 
