@@ -81,8 +81,8 @@ body {
   font-size: 13px;
 }
 
-/* Home */
-.home {
+/* Home and Profile */
+.home, .profile {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -91,15 +91,22 @@ body {
   text-align: center;
 }
 
-.home h1 {
+.home h1, .profile h2 {
   font-size: 2rem;
   margin-bottom: 1rem;
 }
 
-.home button {
+.btn {
   padding: 10px 14px;
   border-radius: 6px;
-  border: 1px solid #ddd;
-  background: #fff;
+  border: none;
+  background: var(--primary);
+  color: white;
   cursor: pointer;
+  font-weight: 600;
+  margin: 0.5rem;
+}
+
+.btn:hover {
+  opacity: 0.9;
 }
