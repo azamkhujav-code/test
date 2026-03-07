@@ -12,8 +12,18 @@ const corsOptions = {
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'Accept',
+    'Origin',
+    'Access-Control-Request-Method',
+    'Access-Control-Request-Headers'
+  ],
+  exposedHeaders: ['Content-Length', 'X-Kuma-Revision'],
+  maxAge: 600, // 10 minutes
 };
 
 const securityHeaders = {
@@ -35,6 +45,7 @@ const securityHeaders = {
     block-all-mixed-content;
     upgrade-insecure-requests;
   `.replace(/\s+/g, ' ').trim(),
+  'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
 };
 
 // https://vite.dev/config/
