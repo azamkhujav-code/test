@@ -33,4 +33,16 @@ describe('Login Component', () => {
     fireEvent.click(submitButton);
     expect(mockOnLogin).not.toHaveBeenCalled();
   });
+
+  test('form submission with valid input calls onLogin', () => {
+    const emailInput = screen.getByLabelText('Email');
+    const passwordInput = screen.getByLabelText('Password');
+    const submitButton = screen.getByRole('button', { name: /log in/i });
+
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'password123' } });
+    fireEvent.click(submitButton);
+
+    expect(mockOnLogin).toHaveBeenCalledWith('test@example.com');
+  });
 });
