@@ -5,4 +5,12 @@ export default {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+  globals: {
+    'ts-jest': {
+      tsconfig: {
+        jsx: 'react-jsx',
+        esModuleInterop: true,
+      },
+    },
+  },
 };
