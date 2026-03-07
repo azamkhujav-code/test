@@ -15,4 +15,10 @@ describe('Login Component', () => {
   });
 
   // Tests will be added here
+
+  test('email input onChange updates state', () => {
+    const emailInput = screen.getByLabelText('Email');
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    expect(emailInput).toHaveValue('test@example.com');
+  });
 });
