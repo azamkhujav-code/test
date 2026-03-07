@@ -45,4 +45,12 @@ describe('Login Component', () => {
 
     expect(mockOnLogin).toHaveBeenCalledWith('test@example.com');
   });
+
+  test('error state when submitting with empty fields', () => {
+    const submitButton = screen.getByRole('button', { name: /log in/i });
+    fireEvent.click(submitButton);
+
+    const errorMessage = screen.getByText('Please enter both email and password.');
+    expect(errorMessage).toBeInTheDocument();
+  });
 });
