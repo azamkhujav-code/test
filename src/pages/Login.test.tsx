@@ -27,4 +27,10 @@ describe('Login Component', () => {
     fireEvent.change(passwordInput, { target: { value: 'password123' } });
     expect(passwordInput).toHaveValue('password123');
   });
+
+  test('form submission with empty fields prevents onLogin call', () => {
+    const submitButton = screen.getByRole('button', { name: /log in/i });
+    fireEvent.click(submitButton);
+    expect(mockOnLogin).not.toHaveBeenCalled();
+  });
 });
