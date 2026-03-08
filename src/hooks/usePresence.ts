@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import * as Ably from 'ably';
 import { UserPresence, PresenceData, CursorPosition } from '../types/presence';
 
@@ -7,6 +7,23 @@ const usePresence = (channelName: string, user: UserPresence) => {
   const [ably, setAbly] = useState<Ably.Realtime | null>(null);
   const [channel, setChannel] = useState<Ably.Types.RealtimeChannelPromise | null>(null);
 
+  const handlePresenceMessage = useCallback((message: Ably.Types.PresenceMessage) => {
+    const presenceUser = message.data as UserPresence;
+    switch (message.action) {
+      case 'enter':
+        setActiveUsers((prev) => [...prev, presenceUser]);
+        break;
+      case 'leave':
+        setActiveUsers((prev) => prev.filter((u) => u.clientId !== message.clientId));
+        break;
+      case 'update':
+        setActiveUsers((prev) =>
+          prev.map((u) => (u.clientId === message.clientId ? { ...u, ...presenceUser } : u))
+        );
+        break;
+    }
+  }, []);
+
   useEffect(() => {
     const ablyInstance = new Ably.Realtime({ key: process.env.REACT_APP_ABLY_API_KEY });
     setAbly(ablyInstance);
@@ -14,33 +31,34 @@ const usePresence = (channelName: string, user: UserPresence) => {
     const presenceChannel = ablyInstance.channels.get(channelName);
     setChannel(presenceChannel);
 
-    presenceChannel.presence.subscribe('enter', (member: Ably.Types.PresenceMessage) => {
-      setActiveUsers((prev) => [...prev, member.data as UserPresence]);
-    });
+    presenceChannel.presence.subscribe(handlePresenceMessage);
 
-    presenceChannel.presence.subscribe('leave', (member: Ably.Types.PresenceMessage) => {
-      setActiveUsers((prev) => prev.filter((u) => u.clientId !== member.clientId));
+    presenceChannel.presence.get((err, members) => {
+      if (!err) {
+        setActiveUsers(members.map((member) => member.data as UserPresence));
+      }
     });
 
     presenceChannel.presence.enter(user);
 
     return () => {
+      presenceChannel.presence.unsubscribe();
       presenceChannel.presence.leave();
       ablyInstance.close();
     };
-  }, [channelName, user]);
+  }, [channelName, user, handlePresenceMessage]);
 
-  const updateCursorPosition = (position: CursorPosition) => {
+  const updateCursorPosition = useCallback((position: CursorPosition) => {
     if (channel) {
       channel.presence.update({ ...user, cursorPosition: position });
     }
-  };
+  }, [channel, user]);
 
-  const broadcastPresenceData = (data: PresenceData) => {
+  const broadcastPresenceData = useCallback((data: PresenceData) => {
     if (channel) {
       channel.publish('presence', data);
     }
-  };
+  }, [channel]);
 
   return { activeUsers, updateCursorPosition, broadcastPresenceData };
 };
