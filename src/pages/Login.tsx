@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 type Props = {
-  onLogin: () => void;
+  onLogin: (email: string, password: string) => void;
 };
 
 const Login: React.FC<Props> = ({ onLogin }) => {
@@ -16,20 +16,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:3001/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include',
-      });
-      if (response.ok) {
-        onLogin();
-      } else {
-        const data = await response.json();
-        setError(data.message || 'Login failed');
-      }
+      await onLogin(email, password);
     } catch (error) {
       console.error('Error during login:', error);
       setError('An error occurred during login');

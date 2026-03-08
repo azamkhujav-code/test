@@ -3,7 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 const app = express();
-const port = 3001;
+const port = 3000;
 
 app.use(cors({
   origin: 'http://localhost:5173', // Update this to match your Vite dev server port
@@ -31,7 +31,11 @@ app.post('/api/login', (req, res) => {
 });
 
 app.post('/api/logout', (req, res) => {
-  res.clearCookie('authToken');
+  res.clearCookie('authToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax'
+  });
   res.json({ success: true });
 });
 

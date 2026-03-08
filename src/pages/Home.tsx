@@ -1,5 +1,5 @@
-import React from 'react';\n// Task 2 completed: Home component scaffold added
-
+import React from 'react';
+// Task 2 completed: Home component scaffold added
 type Props = {
   user?: string;
   onLogout: () => void;
