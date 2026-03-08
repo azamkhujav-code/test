@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 type Props = {
-  onLogin: (email: string) => void;
+  onLogin: () => void;
 };
 
 const Login: React.FC<Props> = ({ onLogin }) => {
@@ -9,16 +9,31 @@ const Login: React.FC<Props> = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
     }
-    // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+    try {
+      const response = await fetch('http://localhost:3001/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include',
+      });
+      if (response.ok) {
+        onLogin();
+      } else {
+        const data = await response.json();
+        setError(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      setError('An error occurred during login');
+    }
   };
 
   return (
