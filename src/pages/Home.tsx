@@ -21,10 +21,12 @@ const Home: React.FC<Props> = ({ user, ably, onLogout }) => {
     if (ably) {
       const channel = ably.channels.get('document-1');
       channel.subscribe('content', (message) => {
+        console.log('Received content update:', message.data);
         setContent(message.data);
       });
 
       channel.subscribe('cursor', (message) => {
+        console.log('Received cursor update:', message.clientId, message.data);
         setCursors((prevCursors) => ({
           ...prevCursors,
           [message.clientId]: message.data as CursorPosition,
@@ -37,11 +39,16 @@ const Home: React.FC<Props> = ({ user, ably, onLogout }) => {
     }
   }, [ably]);
 
+  useEffect(() => {
+    console.log('Active users updated:', activeUsers);
+  }, [activeUsers]);
+
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value;
     setContent(newContent);
     if (ably) {
       const channel = ably.channels.get('document-1');
+      console.log('Publishing content update:', newContent);
       channel.publish('content', newContent);
     }
   };
@@ -56,6 +63,7 @@ const Home: React.FC<Props> = ({ user, ably, onLogout }) => {
       updateCursorPosition(position);
       if (ably) {
         const channel = ably.channels.get('document-1');
+        console.log('Publishing cursor update:', position);
         channel.publish('cursor', position);
       }
     }
