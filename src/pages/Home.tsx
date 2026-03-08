@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as Ably from 'ably';
 import usePresence from '../hooks/usePresence';
 import { UserPresence, CursorPosition } from '../types/presence';
+import PresenceIndicator from '../components/PresenceIndicator';
 
 type Props = {
   user: UserPresence;
@@ -50,14 +51,7 @@ const Home: React.FC<Props> = ({ user, ably, onLogout }) => {
   return (
     <div className="home">
       <h1>Welcome, {user.email}!</h1>
-      <div className="active-users">
-        <h3>Active Users:</h3>
-        <ul>
-          {activeUsers.map((activeUser) => (
-            <li key={activeUser.clientId}>{activeUser.email}</li>
-          ))}
-        </ul>
-      </div>
+      <PresenceIndicator activeUsers={activeUsers} />
       <textarea
         ref={editorRef}
         value={content}
