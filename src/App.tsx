@@ -21,13 +21,21 @@ function App() {
     setUser(null);
   };
 
+  // Render function to determine which component to display based on auth state
+  const renderAuthComponent = () => {
+    // Auth State: Not logged in
+    if (!user) {
+      return <Login onLogin={handleLogin} />;
+    }
+    // Auth State: Logged in
+    else {
+      return <Home user={user} onLogout={handleLogout} />;
+    }
+  };
+
   return (
     <div className="App">
-      {!user ? (
-        <Login onLogin={handleLogin} />
-      ) : (
-        <Home user={user} onLogout={handleLogout} />
-      )}
+      {renderAuthComponent()}
     </div>
   );
 }
