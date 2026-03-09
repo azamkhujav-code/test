@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { setCSRFToken, getCSRFToken } from '../utils/csrfUtils';
 
 type Props = {
-  onLogin: (email: string) => void;
+  onLogin: (email: string, csrfToken: string) => void;
 };
 
 const Login: React.FC<Props> = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [csrfToken, setCsrfToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = getCSRFToken() || setCSRFToken();
+    setCsrfToken(token);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,10 +22,14 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       setError("Please enter both email and password.");
       return;
     }
+    if (!csrfToken) {
+      setError("CSRF token is missing. Please try again.");
+      return;
+    }
     // Simple client-side placeholder authentication
     localStorage.setItem("userEmail", email);
     localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+    onLogin(email, csrfToken);
   };
 
   return (
@@ -46,6 +57,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             placeholder="Password"
           />
         </div>
+        <input type="hidden" name="_csrf" value={csrfToken || ''} />
         <button type="submit">Log in</button>
       </form>
     </div>

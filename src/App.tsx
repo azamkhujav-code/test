@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Login from './pages/Login';\n// Task 3 completed: App wired login flow with Login/Home components
+import Login from './pages/Login';
 import Home from './pages/Home';
+import { validateCSRFToken } from './utils/csrfUtils';
 import './App.css';
 
 function App() {
@@ -11,8 +12,13 @@ function App() {
     if (stored) setUser(stored);
   }, []);
 
-  const handleLogin = (email: string) => {
-    setUser(email);
+  const handleLogin = (email: string, csrfToken: string) => {
+    if (validateCSRFToken(csrfToken)) {
+      setUser(email);
+    } else {
+      console.error('Invalid CSRF token');
+      // Handle invalid CSRF token (e.g., show an error message)
+    }
   };
 
   const handleLogout = () => {
