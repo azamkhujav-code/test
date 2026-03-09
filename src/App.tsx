@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Login from './pages/Login';\n// Task 3 completed: App wired login flow with Login/Home components
+import Login from './pages/Login';
 import Home from './pages/Home';
+import { apiRequest, refreshCsrfToken } from './utils/api';
 import './App.css';
 
 function App() {
@@ -9,16 +10,29 @@ function App() {
   useEffect(() => {
     const stored = localStorage.getItem('userEmail');
     if (stored) setUser(stored);
+    refreshCsrfToken();
   }, []);
 
-  const handleLogin = (email: string) => {
-    setUser(email);
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      const data = await apiRequest('/api/login', 'POST', { email, password });
+      if (data.success) {
+        setUser(email);
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('loggedIn');
-    localStorage.removeItem('userEmail');
-    setUser(null);
+  const handleLogout = async () => {
+    try {
+      const data = await apiRequest('/api/logout', 'POST');
+      if (data.success) {
+        setUser(null);
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return (

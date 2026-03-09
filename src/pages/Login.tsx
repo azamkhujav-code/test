@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 type Props = {
-  onLogin: (email: string) => void;
+  onLogin: (email: string, password: string) => void;
 };
 
 const Login: React.FC<Props> = ({ onLogin }) => {
@@ -15,10 +15,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       setError("Please enter both email and password.");
       return;
     }
-    // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+    onLogin(email, password);
   };
 
   return (
