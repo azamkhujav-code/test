@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 type Props = {
-  onLogin: (email: string) => void;
+  onLogin: (email: string, password: string) => void;
 };
 
 const Login: React.FC<Props> = ({ onLogin }) => {
@@ -9,16 +9,17 @@ const Login: React.FC<Props> = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
     }
-    // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+    try {
+      await onLogin(email, password);
+    } catch (error) {
+      setError("Invalid email or password. Please try again.");
+    }
   };
 
   return (
