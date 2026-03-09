@@ -1,9 +1,8 @@
-import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
-export const login = (req: Request, res: Response) => {
+export const login = (req, res) => {
   const { email, password } = req.body;
 
   // TODO: Implement proper user authentication
@@ -23,12 +22,12 @@ export const login = (req: Request, res: Response) => {
   }
 };
 
-export const logout = (_req: Request, res: Response) => {
+export const logout = (_req, res) => {
   res.clearCookie('auth_token');
   res.json({ success: true, message: 'Logged out successfully' });
 };
 
-export const checkAuth = (req: Request, res: Response) => {
+export const checkAuth = (req, res) => {
   const token = req.cookies.auth_token;
 
   if (!token) {
@@ -36,7 +35,7 @@ export const checkAuth = (req: Request, res: Response) => {
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { email: string };
+    const decoded = jwt.verify(token, JWT_SECRET);
     res.json({ success: true, user: { email: decoded.email } });
   } catch (error) {
     res.status(401).json({ success: false, message: 'Invalid token' });

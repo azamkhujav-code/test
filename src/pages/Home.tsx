@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';\n// Task 2 completed: Home component scaffold added
+import axios from 'axios';
 
 type Props = {
   onLogout: () => void;
