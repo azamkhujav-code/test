@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { LOCAL_STORAGE_KEYS } from '../constants/localStorage';
 
 type Props = {
   onLogin: (email: string) => void;
@@ -16,8 +17,8 @@ const Login: React.FC<Props> = ({ onLogin }) => {
       return;
     }
     // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
+    localStorage.setItem(LOCAL_STORAGE_KEYS.USER_EMAIL, email);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LOGGED_IN, "true");
     onLogin(email);
   };
 
