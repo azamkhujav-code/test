@@ -1,4 +1,4 @@
-import { getCSRFToken } from './csrfUtils';
+import { getCSRFToken, getCSRFTokenFromStorage } from './csrfUtils';
 
 interface RequestOptions extends RequestInit {
   data?: object;
@@ -6,10 +6,13 @@ interface RequestOptions extends RequestInit {
 
 export async function apiRequest(url: string, options: RequestOptions = {}): Promise<Response> {
   const csrfToken = getCSRFToken();
+  const csrfTokenFromStorage = getCSRFTokenFromStorage();
   const headers = new Headers(options.headers || {});
 
-  if (csrfToken) {
-    headers.set('X-CSRF-Token', csrfToken);
+  if (csrfToken && csrfTokenFromStorage) {
+    headers.set('X-CSRF-Token', csrfTokenFromStorage);
+  } else {
+    throw new Error('CSRF token not found');
   }
 
   if (options.data) {
@@ -20,6 +23,7 @@ export async function apiRequest(url: string, options: RequestOptions = {}): Pro
   const response = await fetch(url, {
     ...options,
     headers,
+    credentials: 'include', // This ensures cookies are sent with the request
   });
 
   if (!response.ok) {
