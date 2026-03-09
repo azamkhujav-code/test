@@ -1,34 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import Login from './pages/Login';
 import Home from './pages/Home';
-import { validateCSRFToken } from './utils/csrfUtils';
+import { post } from './utils/apiUtils';
 import './App.css';
 
 function App() {
   const [user, setUser] = useState<string | null>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem('userEmail');
-    if (stored) setUser(stored);
+    const checkSession = async () => {
+      try {
+        const response = await post('/api/check-session', {});
+        const data = await response.json();
+        if (data.user) {
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error('Failed to check session:', error);
+      }
+    };
+
+    checkSession();
   }, []);
 
-  const handleLogin = (email: string, csrfToken: string) => {
-    if (validateCSRFToken(csrfToken)) {
-      setUser(email);
-    } else {
-      console.error('Invalid CSRF token');
-      // Handle invalid CSRF token (e.g., show an error message)
-    }
+  const handleLogin = (email: string) => {
+    setUser(email);
   };
 
-  const handleLogout = (csrfToken: string) => {
-    if (validateCSRFToken(csrfToken)) {
-      localStorage.removeItem('loggedIn');
-      localStorage.removeItem('userEmail');
+  const handleLogout = async () => {
+    try {
+      await post('/api/logout', {});
       setUser(null);
-    } else {
-      console.error('Invalid CSRF token');
-      // Handle invalid CSRF token (e.g., show an error message)
+    } catch (error) {
+      console.error('Failed to logout:', error);
     }
   };
 

@@ -1,35 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { setCSRFToken, getCSRFToken } from '../utils/csrfUtils';
+import { post } from '../utils/apiUtils';
 
 type Props = {
-  onLogin: (email: string, csrfToken: string) => void;
+  onLogin: (email: string) => void;
 };
 
 const Login: React.FC<Props> = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = getCSRFToken() || setCSRFToken();
-    setCsrfToken(token);
+    // Ensure CSRF token is set
+    setCSRFToken();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
     }
-    if (!csrfToken) {
-      setError("CSRF token is missing. Please try again.");
-      return;
+
+    try {
+      const response = await post('/api/login', { email, password });
+      const data = await response.json();
+      if (data.success) {
+        onLogin(email);
+      } else {
+        setError(data.message || "Login failed. Please try again.");
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+      console.error(err);
     }
-    // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email, csrfToken);
   };
 
   return (
@@ -57,7 +62,6 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             placeholder="Password"
           />
         </div>
-        <input type="hidden" name="_csrf" value={csrfToken || ''} />
         <button type="submit">Log in</button>
       </form>
     </div>
