@@ -21,10 +21,15 @@ function App() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('loggedIn');
-    localStorage.removeItem('userEmail');
-    setUser(null);
+  const handleLogout = (csrfToken: string) => {
+    if (validateCSRFToken(csrfToken)) {
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('userEmail');
+      setUser(null);
+    } else {
+      console.error('Invalid CSRF token');
+      // Handle invalid CSRF token (e.g., show an error message)
+    }
   };
 
   return (
