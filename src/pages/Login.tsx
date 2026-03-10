@@ -8,17 +8,44 @@ const Login: React.FC<Props> = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
     }
-    // Simple client-side placeholder authentication
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("loggedIn", "true");
-    onLogin(email);
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Call the login API endpoint
+      // The server will set HttpOnly cookies for secure authentication
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include', // Include cookies in the request
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || 'Login failed');
+        return;
+      }
+
+      // Login successful - notify parent component
+      onLogin(email);
+    } catch (err) {
+      setError('An error occurred during login. Please try again.');
+      console.error('Login error:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,6 +61,7 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
+            disabled={loading}
           />
         </div>
         <div className="form-group">
@@ -44,9 +72,12 @@ const Login: React.FC<Props> = ({ onLogin }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            disabled={loading}
           />
         </div>
-        <button type="submit">Log in</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Log in'}
+        </button>
       </form>
     </div>
   );
