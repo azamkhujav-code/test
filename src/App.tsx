@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import Login from './pages/Login';\n// Task 3 completed: App wired login flow with Login/Home components
+import { useEffect, useState } from 'react';
+import Login from './pages/Login';
+// Task 3 completed: App wired login flow with Login/Home components
 import Home from './pages/Home';
 import './App.css';
 
